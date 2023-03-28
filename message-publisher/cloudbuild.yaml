@@ -1,0 +1,39 @@
+steps:
+  - name: openjdk:17
+    id: test
+    entrypoint: "/bin/bash"
+    args:
+      - '-c'
+      - |-
+        set -x
+        ./gradlew check
+
+  - name: openjdk:17
+    id: build-image
+    entrypoint: "/bin/bash"
+    args:
+      - '-c'
+      - |-
+        set -x
+#        ./gradlew bootBuildImage --imageName=us-docker.pkg.dev/$PROJECT_ID/docker-repo/livenotifications:$SHORT_SHA
+        ./gradlew jib --image=us-docker.pkg.dev/$PROJECT_ID/docker-repo/pub-sub-sample:$SHORT_SHA -Djib.to.tags="latest"
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    waitFor:
+      - build-image
+    id: "deploy"
+    args:
+      - 'run'
+      - 'deploy'
+      - "--image=us-docker.pkg.dev/$PROJECT_ID/docker-repo/pub-sub-sample:$SHORT_SHA"
+      - '--platform=managed'
+      - '--project=$PROJECT_ID'
+      - '--region=us-west1'
+      - '--allow-unauthenticated'
+      - '--memory=768Mi'
+      - '--min-instances=1'
+      - '--set-env-vars=SPRING_PROFILES_ACTIVE=gcp'
+      - "--service-account=${_SERVICE_ACCOUNT}"
+      - 'pub-sub-sample'
+substitutions:
+  _SERVICE_ACCOUNT: "tobeprovided"

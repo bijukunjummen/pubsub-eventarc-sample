@@ -1,0 +1,3 @@
+pubsub:
+  topic: eventarc-sample-topic
+  subscriber-id: eventarc-sample-subscription

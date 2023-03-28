@@ -1,0 +1,4 @@
+rootProject.name="pubsub-eventarc-sample"
+
+include "message-publisher"
+include "eventarc-message-listener"
