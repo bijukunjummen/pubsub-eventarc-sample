@@ -10,13 +10,23 @@ steps:
         ./gradlew -p message-publisher check
 
   - name: "us-west1-docker.pkg.dev/$PROJECT_ID/sample-repo/skaffold:latest"
-    id: build-image
+    id: build-event-arc-listener-image
+    waitFor: ['test']
     entrypoint: "/bin/bash"
     args:
       - '-c'
       - |-
         set -x
         ./gradlew -p eventarc-message-listener jibDockerBuild --image=us-docker.pkg.dev/$PROJECT_ID/docker-repo/eventarc-message-listener:$SHORT_SHA -Djib.to.tags="latest"
+
+  - name: "us-west1-docker.pkg.dev/$PROJECT_ID/sample-repo/skaffold:latest"
+    id: build-message-publisher-image
+    waitFor: ['test']
+    entrypoint: "/bin/bash"
+    args:
+      - '-c'
+      - |-
+        set -x
         ./gradlew -p message-publisher jibDockerBuild --image=us-docker.pkg.dev/$PROJECT_ID/docker-repo/message-publisher:$SHORT_SHA -Djib.to.tags="latest"
 
 images:

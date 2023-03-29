@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.Base64;
 import java.util.Map;
 
 @RestController
@@ -28,7 +29,9 @@ public class EventArcMessageController {
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public Mono<ResponseEntity<PubSubBody>> receiveMessage(
             @RequestBody PubSubBody body, @RequestHeader Map<String, String> headers) {
-        LOGGER.info("Received payload: {}, headers: {}", JsonUtils.writeValueAsString(body, objectMapper), headers);
+        String rawData = new String(Base64.getDecoder().decode(body.message().data()));
+        LOGGER.info("Received message: {}, headers: {}", JsonUtils.writeValueAsString(body, objectMapper), headers);
+        LOGGER.info("Payload: {}", rawData);
         return Mono.just(ResponseEntity.ok(body));
     }
 }
