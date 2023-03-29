@@ -11,7 +11,6 @@ steps:
 
   - name: "us-west1-docker.pkg.dev/$PROJECT_ID/sample-repo/skaffold:latest"
     id: build-event-arc-listener-image
-    waitFor: ['test']
     entrypoint: "/bin/bash"
     args:
       - '-c'
@@ -21,7 +20,6 @@ steps:
 
   - name: "us-west1-docker.pkg.dev/$PROJECT_ID/sample-repo/skaffold:latest"
     id: build-message-publisher-image
-    waitFor: ['test']
     entrypoint: "/bin/bash"
     args:
       - '-c'
