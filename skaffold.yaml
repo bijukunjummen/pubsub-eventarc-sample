@@ -1,0 +1,17 @@
+apiVersion: skaffold/v3alpha1
+kind: Config
+metadata:
+  name: sample-service-to-service
+manifests:
+  rawYaml:
+    - eventarc-message-listener/kubernetes/eventarc-deployment.yaml
+    - eventarc-message-listener/kubernetes/eventarc-service.yaml
+build:
+  artifacts:
+    - image: eventarc-listener-image
+      #      context: sample-caller
+      jib:
+        type: gradle
+        project: eventarc-message-listener
+deploy:
+  kubectl: { }
