@@ -8,7 +8,7 @@ manifests:
     - eventarc-message-listener/kubernetes/eventarc-service.yaml
 build:
   artifacts:
-    - image: eventarc-listener-image
+    - image: eventarc-message-listener-image
       #      context: sample-caller
       jib:
         type: gradle

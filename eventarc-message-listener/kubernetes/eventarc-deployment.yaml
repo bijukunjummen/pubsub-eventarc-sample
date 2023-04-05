@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: eventarc-listener-deployment
+  name: eventarc-message-listener-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: eventarc-listener
+      app: eventarc-message-listener
   template:
     metadata:
       labels:
-        app: eventarc-listener
+        app: eventarc-message-listener
     spec:
       containers:
-        - name: eventarc-listener
-          image: eventarc-listener-image
+        - name: eventarc-message-listener
+          image: eventarc-message-listener-image
           ports:
             - containerPort: 8080
